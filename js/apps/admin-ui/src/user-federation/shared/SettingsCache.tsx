@@ -24,6 +24,13 @@ const CacheFields = ({ form }: { form: UseFormReturn }) => {
     name: "config.cachePolicy",
   });
 
+  const checkCachePolicy = (policy: string) => {
+    if (Array.isArray(cachePolicyType)) {
+      return cachePolicyType.includes(policy);
+    }
+    return cachePolicyType === policy;
+  };
+
   const hourOptions: SelectControlOption[] = [];
   let hourDisplay = "";
   for (let index = 0; index < 24; index++) {
@@ -65,7 +72,7 @@ const CacheFields = ({ form }: { form: UseFormReturn }) => {
           "NO_CACHE",
         ]}
       />
-      {isEqual(cachePolicyType, ["EVICT_WEEKLY"]) ? (
+      {checkCachePolicy("EVICT_WEEKLY") ? (
         <SelectControl
           id="kc-eviction-day"
           name="config.evictionDay[0]"
@@ -86,8 +93,7 @@ const CacheFields = ({ form }: { form: UseFormReturn }) => {
           ]}
         />
       ) : null}
-      {isEqual(cachePolicyType, ["EVICT_DAILY"]) ||
-      isEqual(cachePolicyType, ["EVICT_WEEKLY"]) ? (
+      {checkCachePolicy("EVICT_DAILY") || checkCachePolicy("EVICT_WEEKLY") ? (
         <>
           <SelectControl
             id="kc-eviction-hour"
@@ -113,7 +119,7 @@ const CacheFields = ({ form }: { form: UseFormReturn }) => {
           />
         </>
       ) : null}
-      {isEqual(cachePolicyType, ["MAX_LIFESPAN"]) ? (
+      {checkCachePolicy("MAX_LIFESPAN") ? (
         <NumberControl
           data-testid="kerberos-cache-lifespan"
           name="config.maxLifespan[0]"
